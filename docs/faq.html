@@ -1,0 +1,27 @@
+---
+title: Calibration FAQ
+---
+
+<div class="row justify-content-center">
+	<div class="col-12 col-md-10 col-lg-9">
+
+{% for faq in site.data.faq %}
+<div class="row">
+	<div class="col-12">
+		<h2>{{ faq.question }}</h2>
+	</div>
+</div>
+<div class="row">
+	<div class="col ms-4 mb-3">
+		{{ faq.answer | markdownify }}
+	</div>
+</div>
+{% endfor %}
+	</div>
+</div>
+
+<script>
+	const dprEl = document.getElementById('devicePixelRatio');
+	dprEl.innerText = window.devicePixelRatio;
+
+</script>

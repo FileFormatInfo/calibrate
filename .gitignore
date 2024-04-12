@@ -1,0 +1,17 @@
+*~
+.cache
+cache/
+*.class
+crash.log
+docs/icons/searchindex.json
+docs/icons/repos
+.env
+.idea/
+.jekyll-metadata
+.jekyll-cache
+*.pyc
+.sass-cache/
+_site/
+tmp/
+_tmp/
+venv/

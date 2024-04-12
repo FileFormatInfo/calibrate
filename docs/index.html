@@ -1,0 +1,118 @@
+---
+title: Monitor DPI Calibration
+---
+
+
+<div class="row justify-content-center">
+  <div class="col-5 col-sm-4 col-md-3 col-lg-2 mb-3">
+    <div class="input-group col-3">
+      <button class="btn btn-outline-secondary" id="minus" type="button">-</button>
+      <input style="text-align: center;" type="number" id="dpi" class="form-control" name="dpi" placeholder="DPI" aria-label="Dots per inch" aria-describedby="">
+      <button class="btn btn-outline-secondary" id="plus" type="button">+</button>
+  </div>
+</div>
+
+<div class="row mb-3">
+  <div class="col d-flex justify-content-center">
+    <div class="d-inline-flex">
+      <img alt="Sizing ruler" class="d-none" id="sizer" src="/images/sizers/ruler.jpeg" />
+    </div>
+  </div>
+</div>
+
+<div class="row mb-3">
+  <div class="col d-flex justify-content-center">
+    <div class="d-inline-flex">
+      <label>Common sizes:</label>
+      <button class="commonsize btn btn-outline-secondary mx-2" type="button">72</button>
+      <button class="commonsize btn btn-outline-secondary mx-2" type="button">96</button>
+      <button class="commonsize btn btn-outline-secondary mx-2" type="button">110</button>
+      <button class="commonsize btn btn-outline-secondary mx-2" type="button">163</button>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-3">
+  <div class="col d-flex justify-content-center">
+    <div class="d-inline-flex">
+      <button class="d-none btn btn-primary" id="next" type="button"></button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ruler.jpeg is 7412x1684 pixels at 1200 DPI
+  const originalWidth = 7412;
+  const originalHeight = 1684;
+  const originalDpi = 1200;
+
+  const dpi = document.getElementById('dpi');
+  const minus = document.getElementById('minus');
+  const plus = document.getElementById('plus');
+  const sizer = document.getElementById('sizer');
+  const next = document.getElementById('next');
+
+  function safeParseInt(value, defaultValue) {
+    const parsed = parseInt(value);
+    return isNaN(parsed) || parsed <= 0 ? defaultValue : parsed;
+  }
+
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+
+  function setDPI(newDPI) {
+    dpi.value = newDPI;
+    sizer.width = originalWidth * newDPI / originalDpi;
+    sizer.height = originalHeight * newDPI / originalDpi;
+    document.cookie = `dpi=${newDPI};`;
+    console.log(document.cookie);
+  }
+
+  minus.addEventListener('click', () => {
+    setDPI(safeParseInt(dpi.value, 96) - 1);
+  });
+
+  plus.addEventListener('click', () => {
+    setDPI(safeParseInt(dpi.value, 96) + 1);
+  });
+
+  const sizerButtons = document.getElementsByClassName('commonsize')
+  for (let i = 0; i < sizerButtons.length; i++) {
+    sizerButtons[i].addEventListener('click', () => {
+      setDPI(parseInt(sizerButtons[i].innerText));
+    });
+  }
+
+  setDPI(safeParseInt(getCookie("dpi"), 96));
+  sizer.classList.remove('d-none');
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const target = urlParams.get('target');
+  if (target) {
+    next.classList.remove('d-none');
+    next.innerText = urlParams.get('label') || 'Continue';
+      next.addEventListener('click', () => {
+        const newLocation = target.replace('{DPI}', dpi.value);
+        if (urlParams.has('debug')) {
+          console.log(`Would go to ${newLocation}`);
+        } else {
+          window.location.href = newLocation;
+        }
+    });
+  }
+
+
+</script>
