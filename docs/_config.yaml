@@ -1,5 +1,5 @@
 #
-# _config.yml for jekyll-shoelace-blank
+# _config.yml for calibrate
 #
 
 exclude: [ "CNAME", "README.md", "LICENSE.txt", "UNLICENSE.txt", "tmp", "*.sh", "**/*_src*" ]
